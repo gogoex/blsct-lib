@@ -7,3 +7,7 @@ autom4te.cache
 depcomp
 install-sh
 missing
+src/bls/
+*.o
+.deps
+stamp-*
