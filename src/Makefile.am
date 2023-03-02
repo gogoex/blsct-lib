@@ -1,3 +1,4 @@
+AM_MAKEFLAGS=BLS_ETH=1
 SUBDIRS = bls
 
 bin_PROGRAMS = blsctlib
