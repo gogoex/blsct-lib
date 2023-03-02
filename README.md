@@ -2,7 +2,7 @@
 
 ## How to build
 ```
-$ autoreconf -fi
+$ ./autogen.sh
 $ ./configure
 $ make
 ```
