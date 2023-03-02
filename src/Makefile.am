@@ -1,3 +1,5 @@
+SUBDIRS = bls
+
 bin_PROGRAMS = blsctlib
 blsctlib_SOURCES = main.cpp
 blsctlib_LDADD = bls/lib/libbls384_256.a bls/mcl/lib/libmcl.a
