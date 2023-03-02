@@ -1,8 +1,7 @@
 AM_MAKEFLAGS=BLS_ETH=1
 SUBDIRS = bls
 
-bin_PROGRAMS = blsctlib
-blsctlib_SOURCES = main.cpp
-blsctlib_LDADD = bls/lib/libbls384_256.a bls/mcl/lib/libmcl.a
-blsctlib_LDFLAGS = -pthread
-blsctlib_CXXFLAGS = -Wall -std=c++17 -Ibls/include -Ibls/mcl/include
+noinst_LIBRARIES = libblsct.a
+libblsct_a_SOURCES = main.cpp
+libblsct_a_LIBADD = bls/lib/libbls384_256.a bls/mcl/lib/libmcl.a
+libblsct_a_CXXFLAGS = -Wall -std=c++17 -Ibls/include -Ibls/mcl/include

@@ -8,6 +8,8 @@ depcomp
 install-sh
 missing
 *.o
+*.a
 .deps
 stamp-*
 src/blsctlib
+r
