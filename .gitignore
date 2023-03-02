@@ -10,3 +10,4 @@ missing
 *.o
 .deps
 stamp-*
+src/blsctlib
