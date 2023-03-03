@@ -12,4 +12,10 @@ missing
 .deps
 stamp-*
 src/blsctlib
-r
+.libs/
+*.la
+*.lo
+libtool
+*~
+ltmain.sh
+compile
