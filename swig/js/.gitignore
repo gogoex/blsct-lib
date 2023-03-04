@@ -1,0 +1,3 @@
+*_wrap.c
+*.so
+!Makefile
