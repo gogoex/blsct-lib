@@ -16,7 +16,7 @@ blsct_wrap.o: blsct_wrap.c blsct.py
 	g++ -c -fpic blsct_wrap.c $(cflags) $(include)
 
 blsct_wrap.c: blsct.i
-	swig -javascript blsct.i
+	swig -c++ -javascript -node blsct.i
 
 run:
 	LD_LIBRARY_PATH=$(bls)/lib:$(mcl)/lib python3
@@ -24,7 +24,7 @@ run:
 clean:
 	rm -f *.o
 	rm -f *.js
-	rm -f *_wrap.c
+	rm -f *_wrap.c*
 	rm -f *.so
 
 .PHONY: clean run
