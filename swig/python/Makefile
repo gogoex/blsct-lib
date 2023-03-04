@@ -1,16 +1,19 @@
 cflags := $(shell python3-config --cflags)
 ldflags := $(shell python3-config --ldflags --embed)
-bls := ../src/bls
-mcl := ../src/bls/mcl
+src := ../../src
+bls := $(src)/bls
+mcl := $(bls)/mcl
+config := ../..
+include := -I$(bls)/include -I$(mcl)/include -I$(config)
 
 blsct.a: lib.o blsct_wrap.o
 	g++ -Wl,--no-undefined --shared lib.o blsct_wrap.o -L$(bls)/lib -lbls384_256 -L$(mcl)/lib -lmcl $(ldflags) -o _blsct.so
 
 lib.o: blsct_wrap.c blsct.py
-	g++ -c -fpic ../src/lib.cpp $(cflags) -I$(bls)/include -I$(mcl)/include -I..
+	g++ -c -fpic $(src)/lib.cpp $(cflags) $(include)
 
 blsct_wrap.o: blsct_wrap.c blsct.py
-	g++ -c -fpic blsct_wrap.c $(cflags) -I$(bls)/include -I$(mcl)/include -I..
+	g++ -c -fpic blsct_wrap.c $(cflags) $(include)
 
 blsct_wrap.c: blsct.i
 	swig -python blsct.i
