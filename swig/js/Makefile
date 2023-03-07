@@ -1,21 +1,21 @@
-cflags := $(shell python3-config --cflags)
-ldflags := $(shell python3-config --ldflags --embed)
+cflags :=
+ldflags := -L/usr/lib/x86_64-linux-gnu -lv8
 src := ../../src
 bls := $(src)/bls
 mcl := $(bls)/mcl
 config := ../..
-include := -I$(bls)/include -I$(mcl)/include -I$(config)
+include := -I$(bls)/include -I$(mcl)/include -I$(config) -I/usr/include/nodejs/src -I/usr/include/nodejs/deps/v8/include
 
-blsct.a: lib.o blsct_wrap.o
+blsct.so: lib.o blsct_wrap.o
 	g++ -Wl,--no-undefined --shared lib.o blsct_wrap.o -L$(bls)/lib -lbls384_256 -L$(mcl)/lib -lmcl $(ldflags) -o _blsct.so
 
-lib.o: blsct_wrap.c blsct.py
+lib.o: $(src)/lib.cpp
 	g++ -c -fpic $(src)/lib.cpp $(cflags) $(include)
 
-blsct_wrap.o: blsct_wrap.c blsct.py
-	g++ -c -fpic blsct_wrap.c $(cflags) $(include)
+blsct_wrap.o: blsct_wrap.cxx
+	g++ -c -fpic blsct_wrap.cxx $(cflags) $(include)
 
-blsct_wrap.c: blsct.i
+blsct_wrap.cxx: blsct.i
 	swig -c++ -javascript -node blsct.i
 
 run:
