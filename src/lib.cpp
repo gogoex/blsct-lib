@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <config.h>
-#include "../include/lib.h"
+#include <lib.h>
 
 void BlsInit() {
     if (blsInit(MCL_BLS12_381, MCLBN_COMPILED_TIME_VAR) != 0) {

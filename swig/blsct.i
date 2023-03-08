@@ -1,8 +1,8 @@
 %module blsct
 
 %insert(cgo_comment) %{
-#cgo CXXFLAGS: -I../src/bls/include -I../src/bls/mcl/include -I..
-#cgo LDFLAGS: -L../src/bls/lib -L../src/bls/mcl/lib -lmcl -lbls384_256
+#cgo CXXFLAGS: -I../../../src/bls/include -I../../../src/bls/mcl/include -I../../../include -I../../..
+#cgo LDFLAGS: -L../../../src/bls/lib -L../../../src/bls/mcl/lib -lmcl -lbls384_256
 %}
 
 %{
