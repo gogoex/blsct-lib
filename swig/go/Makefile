@@ -2,7 +2,7 @@ swig := ../swig/swig
 module := blsct
 module_wrap := $(module)/$(module)_wrap.cxx
 module_go := $(module)/$(module).go
-module_main := $(module)/$(module).cxx
+module_main := $(module)/lib.cxx
 exe := main
 
 $(exe): $(module_wrap) $(module_go) $(module_main) config.h src include
