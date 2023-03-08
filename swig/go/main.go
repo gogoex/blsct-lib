@@ -2,11 +2,11 @@ package main
 
 import (
     "blsct-test/blsct"
-	"fmt"
+    "fmt"
 )
 
 func main() {
-	blsct.BlsInit();
-	res := blsct.TestAddition();
-	fmt.Println(res);
+    blsct.BlsInit();
+    res := blsct.TestAddition();
+    fmt.Println(res);
 }
