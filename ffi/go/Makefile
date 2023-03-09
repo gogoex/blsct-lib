@@ -4,12 +4,13 @@ module_wrap := $(module)/$(module)_wrap.cxx
 module_go := $(module)/$(module).go
 module_main := $(module)/lib.cxx
 exe := main
+interface := $(module)-go.i
 libdir := ../..
 
 $(exe): $(module_wrap) $(module_go) $(module_main)
 	go build -x $(exe).go
 
-$(module_wrap): blsct.i
+$(module_wrap): $(interface)
 	$(swig) -go -cgo -c++ -outdir $(module) -o $@ $<
 
 $(module_main):

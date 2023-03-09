@@ -5,6 +5,7 @@
       'include_dirs': [
          '../../src/bls/include',
          '../../src/bls/mcl/include',
+         '../../include',
          '../..',
       ],
       'libraries': [

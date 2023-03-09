@@ -2,6 +2,6 @@
 	path = src/bls
 	url = https://github.com/herumi/bls
 	branch = master
-[submodule "swig/swig"]
-	path = swig/swig
+[submodule "ffi/swig"]
+	path = ffi/swig
 	url = https://github.com/swig/swig.git
