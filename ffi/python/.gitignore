@@ -1,5 +1,5 @@
 *_wrap.c
-*.py
+blsct.py
 *.so
 __pycache__
 !Makefile
