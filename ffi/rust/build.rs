@@ -32,7 +32,7 @@ fn main() {
         .arg("-o").arg(out_dir.join("blsct.o"))
         .arg(src_dir.join("lib.cpp"))
         .output()
-        .expect("could not spawn `g++`")
+        .expect("Failed to spawn `g++`")
         .status
         .success()
     {
@@ -43,17 +43,13 @@ fn main() {
         .arg(out_dir.join("libblsct.a"))
         .arg(out_dir.join("blsct.o"))
         .output()
-        .expect("could not spawn `ar`")
+        .expect("Failed to spawn `ar`")
         .status
         .success()
     {
         panic!("Failed to build libblsct.a");
     }
 
-    // TODO find out why the first attempt with `.compile("blsct") fails
-    // but the second attempt with `.compile("blsct2")` works
-    // currently using lower level code above, but better to use cc::Build if possible
-    //
     // cc::Build::new()
     //     .cpp(true)
     //     .file(src_dir.join("lib.cpp"))
