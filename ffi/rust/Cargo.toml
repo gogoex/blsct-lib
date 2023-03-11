@@ -1,0 +1,11 @@
+[package]
+name = "rust"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "cpp_example_rust_part"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+flapigen = "0.6.0-pre9"
