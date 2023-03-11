@@ -1,31 +1,75 @@
+use std::env;
+use std::path::PathBuf;
+
 fn main() {
-    let out_dir = env::var("OUT_DIR").expect("no OUT_DIR, but cargo should provide it");
-    //ANCHOR: cpp_config
-    let cpp_cfg = CppConfig::new(
-        // ANCHOR: cpp_output
-        Path::new("..").join("cpp-part").join("rust-api"),
-        // ANCHOR_END: cpp_output
-        "rust".into(),
-    )
-    .cpp_optional(CppOptional::Boost)
-    .cpp_variant(CppVariant::Boost)
-    .cpp_str_view(CppStrView::Boost);
+    let repo_root = &PathBuf::from("../..");
+    let src_dir = &repo_root.join("src");
+    let include_dir = &repo_root.join("include");
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-    //ANCHOR_END: cpp_config
-    let swig_gen = flapigen::Generator::new(LanguageConfig::CppConfig(cpp_cfg));
-    swig_gen.expand(
-        "c++-api-for-rust",
-        // ANCHOR: rust_input
-        Path::new("src/cpp_glue.rs.in"),
-        // ANCHOR_END: rust_input
+    // -L
+    println!("cargo:rustc-link-search={}", out_dir.to_str().unwrap());
+    println!("cargo:rustc-link-search={}", src_dir.to_str().unwrap());
+    println!("cargo:rustc-link-search={}/bls/lib", src_dir.to_str().unwrap());
+    println!("cargo:rustc-link-search={}/bls/mcl/lib", src_dir.to_str().unwrap());
 
-        // ANCHOR: rust_output
-        &Path::new(&out_dir).join("cpp_glue.rs"),
-        // ANCHOR_END: rust_output
-    );
+    // -l
+    println!("cargo:rustc-link-lib=blsct");
+    println!("cargo:rustc-link-lib=bls384_256");
+    println!("cargo:rustc-link-lib=mcl");
+    println!("cargo:rustc-link-lib=stdc++");
 
-    println!(
-        "cargo:rerun-if-changed={}",
-        Path::new("src").join("cpp_glue.rs.in").display()
-    );
+    // header file to create bindings
+    println!("cargo:rerun-if-changed={}/lib.cpp", src_dir.to_str().unwrap());
+    println!("cargo:rerun-if-changed={}/lib.h", include_dir.to_str().unwrap());
+
+    if !std::process::Command::new("g++")
+        .arg("-c")
+        .arg("-I").arg(src_dir.join("bls").join("include"))
+        .arg("-I").arg(src_dir.join("bls").join("mcl").join("include"))
+        .arg("-I").arg(repo_root)
+        .arg("-I").arg(repo_root.join("include"))
+        .arg("-o").arg(out_dir.join("blsct.o"))
+        .arg(src_dir.join("lib.cpp"))
+        .output()
+        .expect("could not spawn `g++`")
+        .status
+        .success()
+    {
+        panic!("Failed to build lib.o");
+    }
+    if !std::process::Command::new("ar")
+        .arg("rcs")
+        .arg(out_dir.join("libblsct.a"))
+        .arg(out_dir.join("blsct.o"))
+        .output()
+        .expect("could not spawn `ar`")
+        .status
+        .success()
+    {
+        panic!("Failed to build libblsct.a");
+    }
+
+    // TODO find out why the first attempt with `.compile("blsct") fails
+    // but the second attempt with `.compile("blsct2")` works
+    // currently using lower level code above, but better to use cc::Build if possible
+    //
+    // cc::Build::new()
+    //     .cpp(true)
+    //     .file(src_dir.join("lib.cpp"))
+    //     .include(src_dir.join("bls").join("include"))
+    //     .include(src_dir.join("bls").join("mcl").join("include"))
+    //     .include(repo_root)
+    //     .include(repo_root.join("include"))
+    //     .compile("blsct");
+
+    let bindings = bindgen::Builder::default()
+        .header(include_dir.join("lib.h").to_str().unwrap())
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .generate()
+        .expect("Failed to generate bindings");
+
+    bindings
+        .write_to_file(out_dir.join("bindings.rs"))
+        .expect("Failed to generate bindings");
 }
